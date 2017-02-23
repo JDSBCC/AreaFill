@@ -10,16 +10,15 @@ public class SwipeDetector : MonoBehaviour
     private float minSwipeDist = 50.0f;
     private float maxSwipeTime = 0.5f;
 
-    private float left=0, right = 0, up=0.51f, down=0;
+    private float left=0, right = 0, up=0, down=0;
     private Vector3 position;
-    public GameObject block;
     private BuildField field;
 
     private void Start()
     {
         field = GameObject.FindGameObjectWithTag("field").GetComponent<BuildField>();
         position = this.transform.position;
-        Invoke("move", 0.2f);
+        Invoke("Move", 0.2f);
     }
     
     private void Update() {
@@ -28,22 +27,22 @@ public class SwipeDetector : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            changePosition(0.51f, 0, 0, 0);
+            ChangePosition(0.51f, 0, 0, 0);
             //transform.rotation = Quaternion.AngleAxis(180, Vector3.forward);
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            changePosition(0, 0.51f, 0, 0);
+            ChangePosition(0, 0.51f, 0, 0);
             //transform.rotation = Quaternion.AngleAxis(0, Vector3.forward);
         }
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            changePosition(0, 0, 0.51f, 0);
+            ChangePosition(0, 0, 0.51f, 0);
             //transform.rotation = Quaternion.AngleAxis(90, Vector3.forward);
         }
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            changePosition(0, 0, 0, 0.51f);
+            ChangePosition(0, 0, 0, 0.51f);
             //transform.rotation = Quaternion.AngleAxis(270, Vector3.forward);
         }
 
@@ -77,20 +76,20 @@ public class SwipeDetector : MonoBehaviour
 
                             if (swipeType.x != 0.0f) {
                                 if (swipeType.x > 0.0f) {//right
-                                    changePosition(0, 0.51f, 0, 0);
+                                    ChangePosition(0, 0.51f, 0, 0);
                                     //transform.rotation = Quaternion.AngleAxis(0, Vector3.forward);
-                                } else {//lefy
-                                    changePosition(0.51f, 0, 0, 0);
+                                } else {//left
+                                    ChangePosition(0.51f, 0, 0, 0);
                                     //transform.rotation = Quaternion.AngleAxis(180, Vector3.forward);
                                 }
                             }
 
                             if (swipeType.y != 0.0f) {
                                 if (swipeType.y > 0.0f) {//up
-                                    changePosition(0, 0, 0.51f, 0);
+                                    ChangePosition(0, 0, 0.51f, 0);
                                     //transform.rotation = Quaternion.AngleAxis(90, Vector3.forward);
                                 } else {//down
-                                    changePosition(0, 0, 0, 0.51f);
+                                    ChangePosition(0, 0, 0, 0.51f);
                                     //transform.rotation = Quaternion.AngleAxis(270, Vector3.forward);
                                 }
                             }
@@ -103,9 +102,9 @@ public class SwipeDetector : MonoBehaviour
         }
     }
 
-    private void move()
+    private void Move()
     {
-        field.setField((int)(Math.Ceiling(position.x / 0.51f) + 12 - 1), (int)(Math.Ceiling(position.y / 0.51f) + 8 - 1), 2);
+        field.SetField((int)(Math.Round(position.x / 0.51f) + 12 - 1), (int)(Math.Round(position.y / 0.51f) + 8 - 1), FieldState.TEMP_BLOCK);
         if (position.x - left > -6 && position.x + right < 6 && position.y + up < 3.6f && position.y - down > -3.6f) {
             position.x -= left;
             position.x += right;
@@ -114,12 +113,13 @@ public class SwipeDetector : MonoBehaviour
             position.z = -1;
         }
         this.transform.position = position;
-        field.updateTryingBridge((int)(Math.Ceiling(position.x / 0.51f) + 12 - 1), (int)(Math.Ceiling(position.y / 0.51f) + 8 - 1));
-        field.setField((int)(Math.Ceiling(position.x / 0.51f) + 12 - 1), (int)(Math.Ceiling(position.y / 0.51f) + 8 - 1), 3);
-        Invoke("move", 0.2f);
+        field.UpdateTryingBridge((int)(Math.Round(position.x / 0.51f) + 12 - 1), (int)(Math.Round(position.y / 0.51f) + 8 - 1));
+        field.SetField((int)(Math.Round(position.x / 0.51f) + 12 - 1), (int)(Math.Round(position.y / 0.51f) + 8 - 1), FieldState.HERO);
+        field.Draw();
+        Invoke("Move", 0.15f);
     }
 
-    private void changePosition(float left, float right, float up, float down) {
+    private void ChangePosition(float left, float right, float up, float down) {
         this.left = left;
         this.right = right;
         this.up = up;
