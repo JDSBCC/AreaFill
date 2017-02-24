@@ -104,8 +104,8 @@ public class SwipeDetector : MonoBehaviour
 
     private void Move()
     {
-        field.SetField((int)(Math.Round(position.x / 0.51f) + 12 - 1), (int)(Math.Round(position.y / 0.51f) + 8 - 1), FieldState.TEMP_BLOCK);
-        if (position.x - left > -6 && position.x + right < 6 && position.y + up < 3.6f && position.y - down > -3.6f) {
+        field.SetField((int)(Math.Round(position.x / 0.51f) - field.GetOrigX()), (int)(Math.Round(position.y / 0.51f) - field.GetOrigY()), FieldState.TEMP_BLOCK);
+        if (position.x - left >= field.GetOrigX() * 0.51f && position.x + right < (field.GetSizeX()+ field.GetOrigX()) * 0.51f && position.y + up < (field.GetSizeY()+ field.GetOrigY()) * 0.51f && position.y - down >= field.GetOrigY() * 0.51f) {
             position.x -= left;
             position.x += right;
             position.y += up;
@@ -113,8 +113,8 @@ public class SwipeDetector : MonoBehaviour
             position.z = -1;
         }
         this.transform.position = position;
-        field.UpdateTryingBridge((int)(Math.Round(position.x / 0.51f) + 12 - 1), (int)(Math.Round(position.y / 0.51f) + 8 - 1));
-        field.SetField((int)(Math.Round(position.x / 0.51f) + 12 - 1), (int)(Math.Round(position.y / 0.51f) + 8 - 1), FieldState.HERO);
+        field.UpdateTryingBridge((int)(Math.Round(position.x / 0.51f) - field.GetOrigX()), (int)(Math.Round(position.y / 0.51f) - field.GetOrigY()));
+        field.SetField((int)(Math.Round(position.x / 0.51f) - field.GetOrigX()), (int)(Math.Round(position.y / 0.51f) - field.GetOrigY()), FieldState.HERO);
         field.Draw();
         Invoke("Move", 0.15f);
     }
