@@ -7,6 +7,7 @@ public class BlockController : MonoBehaviour
 
     //public
     public float RotationPeriod = 0.3f;
+    public GameObject CubeWall;
 
     //private
     private Vector3 Scale;
@@ -22,6 +23,8 @@ public class BlockController : MonoBehaviour
     Quaternion FromRotation;
     Quaternion ToRotation;
 
+    bool isEmpty = false;
+
     private void Start()
     {
         Scale = transform.lossyScale;
@@ -30,6 +33,7 @@ public class BlockController : MonoBehaviour
     private void Update()
     {
         Movement();
+        
     }
 
     private void FixedUpdate()
@@ -48,6 +52,7 @@ public class BlockController : MonoBehaviour
             transform.rotation = Quaternion.Lerp(FromRotation, ToRotation, ratio);
             if (ratio == 1)
             {
+                isEmpty = true;
                 IsRotated = false;
                 DirectionX = 0;
                 DirectionZ = 0;
@@ -56,6 +61,19 @@ public class BlockController : MonoBehaviour
         }
     }
 
+    private void LateUpdate()
+    {
+        if (isEmpty)
+        {
+            Instantiate(CubeWall, StartPos, Quaternion.identity);
+            isEmpty = !isEmpty;
+        }
+    }
+
+    private void CreateTrail()
+    {
+
+    }
 
     private void Movement()
     {
@@ -79,7 +97,7 @@ public class BlockController : MonoBehaviour
             ToRotation = transform.rotation;
             transform.rotation = FromRotation;
             SetRadius();
-            RotationTime = 0;
+            RotationTime = 0;       
             IsRotated = true;
         }
     }
