@@ -33,7 +33,7 @@ public class BlockController : MonoBehaviour
     private void Update()
     {
         Movement();
-        
+
     }
 
     private void FixedUpdate()
@@ -59,15 +59,16 @@ public class BlockController : MonoBehaviour
                 RotationTime = 0;
             }
         }
-    }
-
-    private void LateUpdate()
-    {
         if (isEmpty)
         {
             Instantiate(CubeWall, StartPos, Quaternion.identity);
             isEmpty = !isEmpty;
         }
+    }
+
+    private void LateUpdate()
+    {
+        
     }
 
     private void CreateTrail()
